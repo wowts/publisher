@@ -113,7 +113,7 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
         const zip = new adm_zip_1.default();
         zip.addLocalFolder(path, name);
         const version = tag.startsWith("refs/tags/")
-            ? tag.replace("refs/tags/", "")
+            ? tag.replace(/^refs\/tags\/v?/, "")
             : tag.startsWith("refs/heads/")
                 ? tag.replace("refs/heads/", "")
                 : undefined;
