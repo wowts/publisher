@@ -36,7 +36,7 @@ export async function publish(
     const zip = new AdmZip();
     zip.addLocalFolder(path, name);
     const version = tag.startsWith("refs/tags/")
-        ? tag.replace("refs/tags/", "")
+        ? tag.replace(/^refs\/tags\/v?/, "")
         : tag.startsWith("refs/heads/")
         ? tag.replace("refs/heads/", "")
         : undefined;
