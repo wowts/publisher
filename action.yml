@@ -1,11 +1,31 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "Your name here"
+description: "Provide a description here"
+author: "Your name or organization here"
 inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    name:
+        required: true
+        description: "The add-on name (name of the .toc file)"
+    path:
+        required: true
+        description: "Path to the directory with all the files. The toc file must be at the root of this directory."
+    tag:
+        required: true
+        description: "The tag, like refs/tag/XXX"
+    cfApiKey:
+        required: true
+        description: "The Curseforge API Key"
+    cfId:
+        required: true
+        description: "The Curseforge project Id (a number)"
+    wowiApiToken:
+        required: true
+        description: "The WoWInterface API Token"
+    wowiId:
+        required: true
+        description: "The WoWInterface project Id (a number)"
+    changelog:
+        required: true
+        description: "The changelog in Markdown format"
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+    using: "node12"
+    main: "dist/index.js"
