@@ -11,20 +11,20 @@ inputs:
     tag:
         required: true
         description: "The tag, like refs/tag/XXX"
-    cfApiKey:
-        required: true
+    cf-api-key:
+        required: false
         description: "The Curseforge API Key"
-    cfId:
-        required: true
+    cf-id:
+        required: false
         description: "The Curseforge project Id (a number)"
-    wowiApiToken:
-        required: true
+    wowi-api-token:
+        required: false
         description: "The WoWInterface API Token"
-    wowiId:
-        required: true
+    wowi-id:
+        required: false
         description: "The WoWInterface project Id (a number)"
     changelog:
-        required: true
+        required: false
         description: "The changelog in Markdown format"
 runs:
     using: "node12"

@@ -1,9 +1,11 @@
 import AdmZip from "adm-zip";
 import * as core from "@actions/core";
 import bent from "bent";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import FormData from "form-data";
-interface CurseGameVersion {
+import { readChangeLog } from "./changelog";
+
+export interface CurseGameVersion {
     id: number;
     gameVersionTypeID: number;
     name: string;
@@ -29,10 +31,10 @@ export async function publish(
     tag: string,
     cfApiKey: string,
     cfId: number,
-    wowiApiToken: string,
-    wowiId: number,
-    changelog: string
-): Promise<void> {
+    wowiApiToken: string | undefined,
+    wowiId: number | undefined,
+    changelog: string | undefined
+): Promise<boolean> {
     const zip = new AdmZip();
     zip.addLocalFolder(path, name);
     const version = tag.startsWith("refs/tags/")
@@ -42,11 +44,27 @@ export async function publish(
         : undefined;
     if (!version) {
         core.setFailed(`Unable to parse version from tag ${tag}`);
-        return;
+        return false;
+    }
+
+    if (!changelog) {
+        if (!existsSync(`${path}/CHANGELOG.md`)) {
+            core.setFailed(`Unable to find ${path}/CHANGELOG.md`);
+            return false;
+        }
+        const completeChangelog = readFileSync(`${path}/CHANGELOG.md`, {
+            encoding: "utf8",
+        });
+        changelog = readChangeLog(completeChangelog, version);
     }
 
     const zipName = `${name}-${version}.zip`;
     core.info(`Create zip ${zipName}`);
+
+    if (!existsSync(`${path}/${name}.toc`)) {
+        core.setFailed(`Unable to find ${path}/${name}.toc`);
+        return false;
+    }
 
     const tocFile = readFileSync(`${path}/${name}.toc`, { encoding: "utf8" });
     const lines = tocFile.split(/\r?\n/);
@@ -62,12 +80,12 @@ export async function publish(
         core.setFailed(
             `Version in toc ${toc.Version} doesn't match tag ${version}`
         );
-        return;
+        return false;
     }
 
     if (!toc.Interface) {
         core.setFailed("No Interface in toc");
-        return;
+        return false;
     }
 
     let releaseType: string;
@@ -96,7 +114,7 @@ export async function publish(
             core.setFailed(
                 `Game version ${gameVersion} not found on Curseforge`
             );
-            return;
+            return false;
         }
         const formData = new FormData();
         formData.append("file", zip.toBuffer(), {
@@ -131,15 +149,15 @@ export async function publish(
             core.info(`File ${result.id} uploaded to Curseforge`);
         } else if (result.errorMessage) {
             core.setFailed(result.errorMessage);
-            return;
+            return false;
         } else {
             core.info(JSON.stringify(result));
             core.setFailed("Failed to upload to Curseforge");
-            return;
+            return false;
         }
     }
 
-    if (wowiId) {
+    if (wowiId && wowiApiToken) {
         let client = bent("json", "https://api.wowinterface.com/");
         const versions: WowInterfaceGameVersion[] = await client(
             "/addons/compatible.json",
@@ -155,7 +173,7 @@ export async function publish(
             core.setFailed(
                 `Game version ${toc.Interface} not found on WowInterface`
             );
-            return;
+            return false;
         }
 
         const formData = new FormData();
@@ -185,10 +203,10 @@ export async function publish(
 
         if (result.errorMessage) {
             core.setFailed(result.errorMessage);
-            return;
+            return false;
         } else {
             core.info(`File ${result.id} uploaded to WowInterface`);
-            return;
         }
     }
+    return true;
 }

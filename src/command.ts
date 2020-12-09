@@ -8,7 +8,7 @@ const options = requiredOption("-a, --addon [name]", "Add-on name")
     .requiredOption("--curseid [id]")
     .requiredOption("--wowikey [key]")
     .requiredOption("--wowiid [id]")
-    .requiredOption("--changelog [changelog]", "Changelog in Markdown format")
+    .option("--changelog [changelog]", "Changelog in Markdown format")
     .parse(process.argv)
     .opts();
 
