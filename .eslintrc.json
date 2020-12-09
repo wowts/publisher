@@ -54,5 +54,5 @@
         "es6": true,
         "jest/globals": true
     },
-    "ignorePatterns": "**/*.ts"
+    "ignorePatterns": "**/*.test.ts"
 }
