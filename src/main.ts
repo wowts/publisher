@@ -23,7 +23,8 @@ async function run(): Promise<void> {
             cfId,
             wowiApiToken,
             wowiId,
-            changelog
+            changelog,
+            false
         );
         //core.debug(new Date().toTimeString());
 

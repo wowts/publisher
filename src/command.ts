@@ -3,12 +3,13 @@ import { publish } from "./publisher";
 
 const options = requiredOption("-a, --addon [name]", "Add-on name")
     .requiredOption("-p, --path [path]", "Add-on directory path")
-    .requiredOption("-t, --tag [tag]", "The version tag like ref/tags/9.8.0")
-    .requiredOption("--cursekey [key]")
-    .requiredOption("--curseid [id]")
-    .requiredOption("--wowikey [key]")
-    .requiredOption("--wowiid [id]")
+    .requiredOption("-t, --tag [tag]", "The version tag like refs/tags/9.8.0")
+    .option("--cursekey [key]")
+    .option("--curseid [id]")
+    .option("--wowikey [key]")
+    .option("--wowiid [id]")
     .option("--changelog [changelog]", "Changelog in Markdown format")
+    .option("--dryrun")
     .parse(process.argv)
     .opts();
 
@@ -20,5 +21,6 @@ publish(
     parseInt(options.curseid),
     options.wowikey,
     parseInt(options.wowiid),
-    options.changelog
+    options.changelog,
+    options.dryrun
 );

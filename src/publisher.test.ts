@@ -3,8 +3,8 @@ jest.mock("bent");
 import bent from "bent";
 jest.mock("fs");
 import * as fs from "fs";
-jest.mock("adm-zip");
-import AdmZip from "adm-zip";
+jest.mock("archiver");
+import archiver, { Archiver } from "archiver";
 jest.mock("@actions/core");
 import * as core from "@actions/core";
 jest.mock("form-data");
@@ -14,10 +14,21 @@ const formDataContent = new Map<string, any>();
 formDataMock.prototype.append = (name, content) =>
     formDataContent.set(name, content);
 formDataMock.prototype.getBuffer = () => Buffer.alloc(1);
-
-const admZipMock = AdmZip as jest.Mocked<typeof AdmZip>;
-admZipMock.prototype.addLocalFolder = (localPath, zipPath, filter) => {};
-admZipMock.prototype.toBuffer = () => Buffer.alloc(1);
+type ArchiverType = typeof archiver;
+const archiverMock = (archiver as unknown) as jest.MockInstance<
+    ReturnType<ArchiverType>,
+    Parameters<ArchiverType>
+>;
+const zipMock = ({} as unknown) as Archiver;
+zipMock.directory = (dirpath, destpath) => zipMock;
+zipMock.pipe = (t) => t;
+zipMock.on = (event: string, listener: (...args: any[]) => void) => {
+    listener();
+    return zipMock;
+};
+archiverMock.mockImplementation(() => zipMock);
+// archiverMock.prototype.directory = (localPath, name) => {};
+// archiverMock.prototype.toBuffer = () => Buffer.alloc(1);
 
 const fsMock = fs as jest.Mocked<typeof fs>;
 fsMock.existsSync.mockImplementation(() => true);
