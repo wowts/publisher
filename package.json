@@ -29,7 +29,7 @@
         "@types/archiver": "^5.1.0",
         "@types/bent": "^7.3.2",
         "@types/stream-buffers": "^3.0.3",
-        "archiver": "^5.1.0",
+        "archiver": "^5.2.0",
         "bent": "^7.3.12",
         "commander": "^6.2.1",
         "form-data": "^3.0.0",
