@@ -224,7 +224,7 @@ export async function publish(
                 core.setFailed(result.errorMessage);
                 return false;
             } else {
-                core.info(`File ${result.id} uploaded to WowInterface`);
+                core.info(`File uploaded to WowInterface`);
             }
         }
     }
