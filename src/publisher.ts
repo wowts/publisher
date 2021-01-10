@@ -71,9 +71,9 @@ export async function publish(
 
     const zipName = `${name}-${version}.zip`;
     core.info(`Create zip ${zipName}`);
+    const zipContent = buffer.getContents();
     if (dryrun) {
-        const content = buffer.getContents();
-        if (content) writeFileSync(zipName, content);
+        if (zipContent) writeFileSync(zipName, zipContent);
     }
 
     if (!existsSync(`${path}/${name}.toc`)) {
@@ -132,7 +132,7 @@ export async function publish(
             return false;
         }
         const formData = new FormData();
-        formData.append("file", buffer.getContents(), {
+        formData.append("file", zipContent, {
             filename: zipName,
             contentType: "application/zip",
         });
@@ -196,7 +196,7 @@ export async function publish(
         }
 
         const formData = new FormData();
-        formData.append("updatefile", buffer.getContents(), {
+        formData.append("updatefile", zipContent, {
             filename: zipName,
             contentType: "application/zip",
         });

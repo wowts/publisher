@@ -176,10 +176,10 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
         core.info(`Changelog: ${changelog}`);
         const zipName = `${name}-${version}.zip`;
         core.info(`Create zip ${zipName}`);
+        const zipContent = buffer.getContents();
         if (dryrun) {
-            const content = buffer.getContents();
-            if (content)
-                fs_1.writeFileSync(zipName, content);
+            if (zipContent)
+                fs_1.writeFileSync(zipName, zipContent);
         }
         if (!fs_1.existsSync(`${path}/${name}.toc`)) {
             core.setFailed(`Unable to find ${path}/${name}.toc`);
@@ -222,7 +222,7 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
                 return false;
             }
             const formData = new form_data_1.default();
-            formData.append("file", buffer.getContents(), {
+            formData.append("file", zipContent, {
                 filename: zipName,
                 contentType: "application/zip",
             });
@@ -263,7 +263,7 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
                 return false;
             }
             const formData = new form_data_1.default();
-            formData.append("updatefile", buffer.getContents(), {
+            formData.append("updatefile", zipContent, {
                 filename: zipName,
                 contentType: "application/zip",
             });
