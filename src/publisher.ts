@@ -68,6 +68,7 @@ export async function publish(
         changelog = readChangeLog(completeChangelog, version);
     }
     core.info(`Changelog: ${changelog}`);
+    core.setOutput("changelog", changelog);
 
     let readme;
     if (existsSync(`${path}/README.md`)) {
@@ -77,9 +78,9 @@ export async function publish(
     const zipName = `${name}-${version}.zip`;
     core.info(`Create zip ${zipName}`);
     const zipContent = buffer.getContents();
-    if (dryrun) {
-        if (zipContent) writeFileSync(zipName, zipContent);
-    }
+    if (zipContent) writeFileSync(zipName, zipContent);
+    core.setOutput("zip-path", `./${zipName}`);
+    core.setOutput("zip-name", zipName);
 
     if (!existsSync(`${path}/${name}.toc`)) {
         core.setFailed(`Unable to find ${path}/${name}.toc`);

@@ -174,6 +174,7 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
             changelog = changelog_1.readChangeLog(completeChangelog, version);
         }
         core.info(`Changelog: ${changelog}`);
+        core.setOutput("changelog", changelog);
         let readme;
         if (fs_1.existsSync(`${path}/README.md`)) {
             readme = fs_1.readFileSync(`${path}/README.md`, { encoding: "utf8" });
@@ -181,10 +182,10 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
         const zipName = `${name}-${version}.zip`;
         core.info(`Create zip ${zipName}`);
         const zipContent = buffer.getContents();
-        if (dryrun) {
-            if (zipContent)
-                fs_1.writeFileSync(zipName, zipContent);
-        }
+        if (zipContent)
+            fs_1.writeFileSync(zipName, zipContent);
+        core.setOutput("zip-path", `./${zipName}`);
+        core.setOutput("zip-name", zipName);
         if (!fs_1.existsSync(`${path}/${name}.toc`)) {
             core.setFailed(`Unable to find ${path}/${name}.toc`);
             return false;

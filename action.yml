@@ -26,6 +26,13 @@ inputs:
     changelog:
         required: false
         description: "The changelog in Markdown format"
+outputs:
+    zip-path:
+        description: "Path to the created ZIP file"
+    zip-name:
+        description: "Name of the created ZIP file"
+    changelog:
+        description: "The Changelog for this release only"
 runs:
     using: "node12"
     main: "dist/index.js"
