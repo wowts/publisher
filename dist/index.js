@@ -36,7 +36,7 @@ exports.readChangeLog = readChangeLog;
 /***/ }),
 
 /***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -69,8 +69,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__webpack_require__(2186));
-const publisher_1 = __webpack_require__(782);
+const core = __importStar(__nccwpck_require__(2186));
+const publisher_1 = __nccwpck_require__(782);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -99,7 +99,7 @@ run();
 /***/ }),
 
 /***/ 782:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -136,13 +136,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.publish = void 0;
-const core = __importStar(__webpack_require__(2186));
-const bent_1 = __importDefault(__webpack_require__(3113));
-const fs_1 = __webpack_require__(5747);
-const form_data_1 = __importDefault(__webpack_require__(4334));
-const changelog_1 = __webpack_require__(1082);
-const archiver_1 = __importDefault(__webpack_require__(3084));
-const stream_buffers_1 = __webpack_require__(8168);
+const core = __importStar(__nccwpck_require__(2186));
+const bent_1 = __importDefault(__nccwpck_require__(3113));
+const fs_1 = __nccwpck_require__(5747);
+const form_data_1 = __importDefault(__nccwpck_require__(4334));
+const changelog_1 = __nccwpck_require__(1082);
+const archiver_1 = __importDefault(__nccwpck_require__(3084));
+const stream_buffers_1 = __nccwpck_require__(8168);
 function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelog, dryrun) {
     return __awaiter(this, void 0, void 0, function* () {
         const buffer = new stream_buffers_1.WritableStreamBuffer();
@@ -174,6 +174,10 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
             changelog = changelog_1.readChangeLog(completeChangelog, version);
         }
         core.info(`Changelog: ${changelog}`);
+        let readme;
+        if (fs_1.existsSync(`${path}/README.md`)) {
+            readme = fs_1.readFileSync(`${path}/README.md`, { encoding: "utf8" });
+        }
         const zipName = `${name}-${version}.zip`;
         core.info(`Create zip ${zipName}`);
         const zipContent = buffer.getContents();
@@ -270,6 +274,9 @@ function publish(name, path, tag, cfApiKey, cfId, wowiApiToken, wowiId, changelo
             formData.append("id", wowiId);
             formData.append("version", toc.Version);
             formData.append("compatible", wowInterfaceGameVersion.id);
+            formData.append("changelog", changelog);
+            if (readme)
+                formData.append("description", readme);
             if (!dryrun) {
                 client = bent_1.default("json", "POST", "https://api.wowinterface.com/", [
                     200,
@@ -297,7 +304,7 @@ exports.publish = publish;
 /***/ }),
 
 /***/ 7351:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -309,8 +316,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__webpack_require__(2087));
-const utils_1 = __webpack_require__(5278);
+const os = __importStar(__nccwpck_require__(2087));
+const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
  *
@@ -383,7 +390,7 @@ function escapeProperty(s) {
 /***/ }),
 
 /***/ 2186:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -404,11 +411,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __webpack_require__(7351);
-const file_command_1 = __webpack_require__(717);
-const utils_1 = __webpack_require__(5278);
-const os = __importStar(__webpack_require__(2087));
-const path = __importStar(__webpack_require__(5622));
+const command_1 = __nccwpck_require__(7351);
+const file_command_1 = __nccwpck_require__(717);
+const utils_1 = __nccwpck_require__(5278);
+const os = __importStar(__nccwpck_require__(2087));
+const path = __importStar(__nccwpck_require__(5622));
 /**
  * The code to exit an action
  */
@@ -628,7 +635,7 @@ exports.getState = getState;
 /***/ }),
 
 /***/ 717:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -643,9 +650,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__webpack_require__(5747));
-const os = __importStar(__webpack_require__(2087));
-const utils_1 = __webpack_require__(5278);
+const fs = __importStar(__nccwpck_require__(5747));
+const os = __importStar(__nccwpck_require__(2087));
+const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -690,7 +697,7 @@ exports.toCommandValue = toCommandValue;
 /***/ }),
 
 /***/ 1231:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * archiver-utils
@@ -699,15 +706,15 @@ exports.toCommandValue = toCommandValue;
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-archiver/blob/master/LICENSE-MIT
  */
-var fs = __webpack_require__(7758);
-var path = __webpack_require__(5622);
+var fs = __nccwpck_require__(7758);
+var path = __nccwpck_require__(5622);
 
-var flatten = __webpack_require__(8919);
-var difference = __webpack_require__(9764);
-var union = __webpack_require__(8651);
-var isPlainObject = __webpack_require__(5723);
+var flatten = __nccwpck_require__(8919);
+var difference = __nccwpck_require__(9764);
+var union = __nccwpck_require__(8651);
+var isPlainObject = __nccwpck_require__(5723);
 
-var glob = __webpack_require__(1957);
+var glob = __nccwpck_require__(1957);
 
 var file = module.exports = {};
 
@@ -906,7 +913,7 @@ file.normalizeFilesArray = function(data) {
 /***/ }),
 
 /***/ 2072:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * archiver-utils
@@ -915,18 +922,18 @@ file.normalizeFilesArray = function(data) {
  * Licensed under the MIT license.
  * https://github.com/archiverjs/archiver-utils/blob/master/LICENSE
  */
-var fs = __webpack_require__(7758);
-var path = __webpack_require__(5622);
-var nutil = __webpack_require__(1669);
-var lazystream = __webpack_require__(2084);
-var normalizePath = __webpack_require__(5388);
-var defaults = __webpack_require__(1289);
+var fs = __nccwpck_require__(7758);
+var path = __nccwpck_require__(5622);
+var nutil = __nccwpck_require__(1669);
+var lazystream = __nccwpck_require__(2084);
+var normalizePath = __nccwpck_require__(5388);
+var defaults = __nccwpck_require__(1289);
 
-var Stream = __webpack_require__(2413).Stream;
-var PassThrough = __webpack_require__(4785).PassThrough;
+var Stream = __nccwpck_require__(2413).Stream;
+var PassThrough = __nccwpck_require__(4785).PassThrough;
 
 var utils = module.exports = {};
-utils.file = __webpack_require__(1231);
+utils.file = __nccwpck_require__(1231);
 
 function assertPath(path) {
   if (typeof path !== 'string') {
@@ -1069,7 +1076,7 @@ utils.walkdir = function(dirpath, base, callback) {
 /***/ }),
 
 /***/ 5364:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -1102,7 +1109,7 @@ utils.walkdir = function(dirpath, base, callback) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -1117,12 +1124,12 @@ var objectKeys = Object.keys || function (obj) {
 module.exports = Duplex;
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
-var Readable = __webpack_require__(9647);
-var Writable = __webpack_require__(3369);
+var Readable = __nccwpck_require__(9647);
+var Writable = __nccwpck_require__(3369);
 
 util.inherits(Duplex, Readable);
 
@@ -1207,7 +1214,7 @@ Duplex.prototype._destroy = function (err, cb) {
 /***/ }),
 
 /***/ 7905:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -1239,11 +1246,11 @@ Duplex.prototype._destroy = function (err, cb) {
 
 module.exports = PassThrough;
 
-var Transform = __webpack_require__(5401);
+var Transform = __nccwpck_require__(5401);
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 util.inherits(PassThrough, Transform);
@@ -1261,7 +1268,7 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 /***/ }),
 
 /***/ 9647:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -1289,13 +1296,13 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 module.exports = Readable;
 
 /*<replacement>*/
-var isArray = __webpack_require__(893);
+var isArray = __nccwpck_require__(893);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -1305,7 +1312,7 @@ var Duplex;
 Readable.ReadableState = ReadableState;
 
 /*<replacement>*/
-var EE = __webpack_require__(8614).EventEmitter;
+var EE = __nccwpck_require__(8614).EventEmitter;
 
 var EElistenerCount = function (emitter, type) {
   return emitter.listeners(type).length;
@@ -1313,12 +1320,12 @@ var EElistenerCount = function (emitter, type) {
 /*</replacement>*/
 
 /*<replacement>*/
-var Stream = __webpack_require__(1715);
+var Stream = __nccwpck_require__(1715);
 /*</replacement>*/
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -1330,12 +1337,12 @@ function _isUint8Array(obj) {
 /*</replacement>*/
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(1669);
+var debugUtil = __nccwpck_require__(1669);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -1344,8 +1351,8 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(7898);
-var destroyImpl = __webpack_require__(1890);
+var BufferList = __nccwpck_require__(7898);
+var destroyImpl = __nccwpck_require__(1890);
 var StringDecoder;
 
 util.inherits(Readable, Stream);
@@ -1365,7 +1372,7 @@ function prependListener(emitter, event, fn) {
 }
 
 function ReadableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(5364);
+  Duplex = Duplex || __nccwpck_require__(5364);
 
   options = options || {};
 
@@ -1435,14 +1442,14 @@ function ReadableState(options, stream) {
   this.decoder = null;
   this.encoding = null;
   if (options.encoding) {
-    if (!StringDecoder) StringDecoder = __webpack_require__(9708)/* .StringDecoder */ .s;
+    if (!StringDecoder) StringDecoder = __nccwpck_require__(9708)/* .StringDecoder */ .s;
     this.decoder = new StringDecoder(options.encoding);
     this.encoding = options.encoding;
   }
 }
 
 function Readable(options) {
-  Duplex = Duplex || __webpack_require__(5364);
+  Duplex = Duplex || __nccwpck_require__(5364);
 
   if (!(this instanceof Readable)) return new Readable(options);
 
@@ -1591,7 +1598,7 @@ Readable.prototype.isPaused = function () {
 
 // backwards compatibility.
 Readable.prototype.setEncoding = function (enc) {
-  if (!StringDecoder) StringDecoder = __webpack_require__(9708)/* .StringDecoder */ .s;
+  if (!StringDecoder) StringDecoder = __nccwpck_require__(9708)/* .StringDecoder */ .s;
   this._readableState.decoder = new StringDecoder(enc);
   this._readableState.encoding = enc;
   return this;
@@ -2287,7 +2294,7 @@ function indexOf(xs, x) {
 /***/ }),
 
 /***/ 5401:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -2357,11 +2364,11 @@ function indexOf(xs, x) {
 
 module.exports = Transform;
 
-var Duplex = __webpack_require__(5364);
+var Duplex = __nccwpck_require__(5364);
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 util.inherits(Transform, Duplex);
@@ -2508,7 +2515,7 @@ function done(stream, er, data) {
 /***/ }),
 
 /***/ 3369:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -2540,7 +2547,7 @@ function done(stream, er, data) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 module.exports = Writable;
@@ -2577,23 +2584,23 @@ var Duplex;
 Writable.WritableState = WritableState;
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(7127)
+  deprecate: __nccwpck_require__(7127)
 };
 /*</replacement>*/
 
 /*<replacement>*/
-var Stream = __webpack_require__(1715);
+var Stream = __nccwpck_require__(1715);
 /*</replacement>*/
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -2604,14 +2611,14 @@ function _isUint8Array(obj) {
 
 /*</replacement>*/
 
-var destroyImpl = __webpack_require__(1890);
+var destroyImpl = __nccwpck_require__(1890);
 
 util.inherits(Writable, Stream);
 
 function nop() {}
 
 function WritableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(5364);
+  Duplex = Duplex || __nccwpck_require__(5364);
 
   options = options || {};
 
@@ -2761,7 +2768,7 @@ if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.protot
 }
 
 function Writable(options) {
-  Duplex = Duplex || __webpack_require__(5364);
+  Duplex = Duplex || __nccwpck_require__(5364);
 
   // Writable ctor is applied to Duplexes, too.
   // `realHasInstance` is necessary because using plain `instanceof`
@@ -3202,15 +3209,15 @@ Writable.prototype._destroy = function (err, cb) {
 /***/ }),
 
 /***/ 7898:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Buffer = __webpack_require__(1867).Buffer;
-var util = __webpack_require__(1669);
+var Buffer = __nccwpck_require__(1867).Buffer;
+var util = __nccwpck_require__(1669);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -3288,14 +3295,14 @@ if (util && util.inspect && util.inspect.custom) {
 /***/ }),
 
 /***/ 1890:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 // undocumented cb() API, needed for core, not for public API
@@ -3369,17 +3376,17 @@ module.exports = {
 /***/ }),
 
 /***/ 1715:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(2413);
+module.exports = __nccwpck_require__(2413);
 
 
 /***/ }),
 
 /***/ 4785:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
-var Stream = __webpack_require__(2413);
+var Stream = __nccwpck_require__(2413);
 if (process.env.READABLE_STREAM === 'disable' && Stream) {
   module.exports = Stream;
   exports = module.exports = Stream.Readable;
@@ -3390,20 +3397,20 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
   exports.PassThrough = Stream.PassThrough;
   exports.Stream = Stream;
 } else {
-  exports = module.exports = __webpack_require__(9647);
+  exports = module.exports = __nccwpck_require__(9647);
   exports.Stream = Stream || exports;
   exports.Readable = exports;
-  exports.Writable = __webpack_require__(3369);
-  exports.Duplex = __webpack_require__(5364);
-  exports.Transform = __webpack_require__(5401);
-  exports.PassThrough = __webpack_require__(7905);
+  exports.Writable = __nccwpck_require__(3369);
+  exports.Duplex = __nccwpck_require__(5364);
+  exports.Transform = __nccwpck_require__(5401);
+  exports.PassThrough = __nccwpck_require__(7905);
 }
 
 
 /***/ }),
 
 /***/ 9708:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -3431,7 +3438,7 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 /*</replacement>*/
 
 var isEncoding = Buffer.isEncoding || function (encoding) {
@@ -3706,7 +3713,7 @@ function simpleEnd(buf) {
 /***/ }),
 
 /***/ 3084:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * Archiver Vending
@@ -3715,7 +3722,7 @@ function simpleEnd(buf) {
  * @license [MIT]{@link https://github.com/archiverjs/node-archiver/blob/master/LICENSE}
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
-var Archiver = __webpack_require__(5010);
+var Archiver = __nccwpck_require__(5010);
 
 var formats = {};
 
@@ -3787,16 +3794,16 @@ vending.isRegisteredFormat = function (format) {
   return false;
 };
 
-vending.registerFormat('zip', __webpack_require__(8987));
-vending.registerFormat('tar', __webpack_require__(3614));
-vending.registerFormat('json', __webpack_require__(9827));
+vending.registerFormat('zip', __nccwpck_require__(8987));
+vending.registerFormat('tar', __nccwpck_require__(3614));
+vending.registerFormat('json', __nccwpck_require__(9827));
 
 module.exports = vending;
 
 /***/ }),
 
 /***/ 5010:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * Archiver Core
@@ -3805,15 +3812,15 @@ module.exports = vending;
  * @license [MIT]{@link https://github.com/archiverjs/node-archiver/blob/master/LICENSE}
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
-var fs = __webpack_require__(5747);
-var glob = __webpack_require__(7978);
-var async = __webpack_require__(7888);
-var path = __webpack_require__(5622);
-var util = __webpack_require__(2072);
+var fs = __nccwpck_require__(5747);
+var glob = __nccwpck_require__(7978);
+var async = __nccwpck_require__(7888);
+var path = __nccwpck_require__(5622);
+var util = __nccwpck_require__(2072);
 
-var inherits = __webpack_require__(1669).inherits;
-var ArchiverError = __webpack_require__(3143);
-var Transform = __webpack_require__(1642).Transform;
+var inherits = __nccwpck_require__(1669).inherits;
+var ArchiverError = __nccwpck_require__(3143);
+var Transform = __nccwpck_require__(1642).Transform;
 
 var win32 = process.platform === 'win32';
 
@@ -4565,17 +4572,19 @@ Archiver.prototype.glob = function(pattern, options, data) {
  * right after calling this method so you should set listeners beforehand to
  * properly detect stream completion.
  *
- * @return {this}
+ * @return {Promise}
  */
 Archiver.prototype.finalize = function() {
   if (this._state.aborted) {
-    this.emit('error', new ArchiverError('ABORTED'));
-    return this;
+    var abortedError = new ArchiverError('ABORTED');
+    this.emit('error', abortedError);
+    return Promise.reject(abortedError);
   }
 
   if (this._state.finalize) {
-    this.emit('error', new ArchiverError('FINALIZING'));
-    return this;
+    var finalizingError = new ArchiverError('FINALIZING');
+    this.emit('error', finalizingError);
+    return Promise.reject(finalizingError);
   }
 
   this._state.finalize = true;
@@ -4775,7 +4784,7 @@ module.exports = Archiver;
 /***/ }),
 
 /***/ 3143:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
 /**
  * Archiver Core
@@ -4785,7 +4794,7 @@ module.exports = Archiver;
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
 
-var util = __webpack_require__(1669);
+var util = __nccwpck_require__(1669);
 
 const ERROR_CODES = {
   'ABORTED': 'archive was aborted',
@@ -4821,7 +4830,7 @@ exports = module.exports = ArchiverError;
 /***/ }),
 
 /***/ 9827:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * JSON Format Plugin
@@ -4830,11 +4839,11 @@ exports = module.exports = ArchiverError;
  * @license [MIT]{@link https://github.com/archiverjs/node-archiver/blob/master/LICENSE}
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
-var inherits = __webpack_require__(1669).inherits;
-var Transform = __webpack_require__(1642).Transform;
+var inherits = __nccwpck_require__(1669).inherits;
+var Transform = __nccwpck_require__(1642).Transform;
 
-var crc32 = __webpack_require__(4794);
-var util = __webpack_require__(2072);
+var crc32 = __nccwpck_require__(4794);
+var util = __nccwpck_require__(2072);
 
 /**
  * @constructor
@@ -4938,7 +4947,7 @@ module.exports = Json;
 /***/ }),
 
 /***/ 3614:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * TAR Format Plugin
@@ -4947,10 +4956,10 @@ module.exports = Json;
  * @license [MIT]{@link https://github.com/archiverjs/node-archiver/blob/master/LICENSE}
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
-var zlib = __webpack_require__(8761);
+var zlib = __nccwpck_require__(8761);
 
-var engine = __webpack_require__(2283);
-var util = __webpack_require__(2072);
+var engine = __nccwpck_require__(2283);
+var util = __nccwpck_require__(2072);
 
 /**
  * @constructor
@@ -5112,7 +5121,7 @@ module.exports = Tar;
 /***/ }),
 
 /***/ 8987:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * ZIP Format Plugin
@@ -5121,8 +5130,8 @@ module.exports = Tar;
  * @license [MIT]{@link https://github.com/archiverjs/node-archiver/blob/master/LICENSE}
  * @copyright (c) 2012-2014 Chris Talkington, contributors.
  */
-var engine = __webpack_require__(6454);
-var util = __webpack_require__(2072);
+var engine = __nccwpck_require__(6454);
+var util = __nccwpck_require__(2072);
 
 /**
  * @constructor
@@ -10087,13 +10096,13 @@ module.exports = Zip;
 /***/ }),
 
 /***/ 4812:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports =
 {
-  parallel      : __webpack_require__(8210),
-  serial        : __webpack_require__(445),
-  serialOrdered : __webpack_require__(3578)
+  parallel      : __nccwpck_require__(8210),
+  serial        : __nccwpck_require__(445),
+  serialOrdered : __nccwpck_require__(3578)
 };
 
 
@@ -10136,9 +10145,9 @@ function clean(key)
 /***/ }),
 
 /***/ 2794:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var defer = __webpack_require__(5295);
+var defer = __nccwpck_require__(5295);
 
 // API
 module.exports = async;
@@ -10210,10 +10219,10 @@ function defer(fn)
 /***/ }),
 
 /***/ 9023:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var async = __webpack_require__(2794)
-  , abort = __webpack_require__(1700)
+var async = __nccwpck_require__(2794)
+  , abort = __nccwpck_require__(1700)
   ;
 
 // API
@@ -10336,10 +10345,10 @@ function state(list, sortMethod)
 /***/ }),
 
 /***/ 7942:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var abort = __webpack_require__(1700)
-  , async = __webpack_require__(2794)
+var abort = __nccwpck_require__(1700)
+  , async = __nccwpck_require__(2794)
   ;
 
 // API
@@ -10372,11 +10381,11 @@ function terminator(callback)
 /***/ }),
 
 /***/ 8210:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var iterate    = __webpack_require__(9023)
-  , initState  = __webpack_require__(2474)
-  , terminator = __webpack_require__(7942)
+var iterate    = __nccwpck_require__(9023)
+  , initState  = __nccwpck_require__(2474)
+  , terminator = __nccwpck_require__(7942)
   ;
 
 // Public API
@@ -10422,9 +10431,9 @@ function parallel(list, iterator, callback)
 /***/ }),
 
 /***/ 445:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var serialOrdered = __webpack_require__(3578);
+var serialOrdered = __nccwpck_require__(3578);
 
 // Public API
 module.exports = serial;
@@ -10446,11 +10455,11 @@ function serial(list, iterator, callback)
 /***/ }),
 
 /***/ 3578:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var iterate    = __webpack_require__(9023)
-  , initState  = __webpack_require__(2474)
-  , terminator = __webpack_require__(7942)
+var iterate    = __nccwpck_require__(9023)
+  , initState  = __nccwpck_require__(2474)
+  , terminator = __nccwpck_require__(7942)
   ;
 
 // Public API
@@ -10654,19 +10663,19 @@ module.exports = mkrequest => (...args) => {
 /***/ }),
 
 /***/ 3113:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
-const http = __webpack_require__(8605)
-const https = __webpack_require__(7211)
-const { URL } = __webpack_require__(8835)
-const isStream = __webpack_require__(1554)
-const caseless = __webpack_require__(5684)
-const bytes = __webpack_require__(5734)
-const bent = __webpack_require__(3076)
-const zlib = __webpack_require__(8761)
-const { PassThrough } = __webpack_require__(2413)
+const http = __nccwpck_require__(8605)
+const https = __nccwpck_require__(7211)
+const { URL } = __nccwpck_require__(8835)
+const isStream = __nccwpck_require__(1554)
+const caseless = __nccwpck_require__(5684)
+const bytes = __nccwpck_require__(5734)
+const bent = __nccwpck_require__(3076)
+const zlib = __nccwpck_require__(8761)
+const { PassThrough } = __nccwpck_require__(2413)
 
 const compression = {}
 
@@ -10840,12 +10849,12 @@ module.exports = bent(mkrequest)
 /***/ }),
 
 /***/ 3664:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const { Buffer } = __webpack_require__(4293)
+const { Buffer } = __nccwpck_require__(4293)
 const symbol = Symbol.for('BufferList')
 
 function BufferList (buf) {
@@ -11244,14 +11253,14 @@ module.exports = BufferList
 /***/ }),
 
 /***/ 336:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const DuplexStream = __webpack_require__(1642).Duplex
-const inherits = __webpack_require__(4124)
-const BufferList = __webpack_require__(3664)
+const DuplexStream = __nccwpck_require__(1642).Duplex
+const inherits = __nccwpck_require__(4124)
+const BufferList = __nccwpck_require__(3664)
 
 function BufferListStream (callback) {
   if (!(this instanceof BufferListStream)) {
@@ -11336,10 +11345,10 @@ module.exports.BufferList = BufferList
 /***/ }),
 
 /***/ 3717:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var concatMap = __webpack_require__(6891);
-var balanced = __webpack_require__(9417);
+var concatMap = __nccwpck_require__(6891);
+var balanced = __nccwpck_require__(9417);
 
 module.exports = expandTop;
 
@@ -11544,9 +11553,9 @@ function expand(str, isTop) {
 /***/ }),
 
 /***/ 4794:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var Buffer = __webpack_require__(4293).Buffer;
+var Buffer = __nccwpck_require__(4293).Buffer;
 
 var CRC_TABLE = [
   0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419,
@@ -11662,13 +11671,13 @@ module.exports = crc32;
 /***/ }),
 
 /***/ 3089:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 /* globals atob, btoa, crypto */
 /* istanbul ignore file */
 
-const bytes = __webpack_require__(4391)
+const bytes = __nccwpck_require__(4391)
 
 bytes.from = (_from, _encoding) => {
   if (_from instanceof DataView) return _from
@@ -11816,13 +11825,13 @@ module.exports = bytes
 /***/ }),
 
 /***/ 5734:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
-const crypto = __webpack_require__(6417)
-const fallback = __webpack_require__(3089).from
-const bytes = __webpack_require__(4391)
+const crypto = __nccwpck_require__(6417)
+const fallback = __nccwpck_require__(3089).from
+const bytes = __nccwpck_require__(4391)
 
 bytes.from = (_from, encoding) => {
   if (_from instanceof DataView) return _from
@@ -11928,11 +11937,11 @@ module.exports.httpify = function (resp, headers) {
 /***/ }),
 
 /***/ 5443:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var util = __webpack_require__(1669);
-var Stream = __webpack_require__(2413).Stream;
-var DelayedStream = __webpack_require__(8611);
+var util = __nccwpck_require__(1669);
+var Stream = __nccwpck_require__(2413).Stream;
+var DelayedStream = __nccwpck_require__(8611);
 
 module.exports = CombinedStream;
 function CombinedStream() {
@@ -12165,7 +12174,7 @@ ArchiveEntry.prototype.isDirectory = function() {};
 /***/ }),
 
 /***/ 6728:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -12174,11 +12183,11 @@ ArchiveEntry.prototype.isDirectory = function() {};
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
-var inherits = __webpack_require__(1669).inherits;
-var Transform = __webpack_require__(1642).Transform;
+var inherits = __nccwpck_require__(1669).inherits;
+var Transform = __nccwpck_require__(1642).Transform;
 
-var ArchiveEntry = __webpack_require__(2240);
-var util = __webpack_require__(5208);
+var ArchiveEntry = __nccwpck_require__(2240);
+var util = __nccwpck_require__(5208);
 
 var ArchiveOutputStream = module.exports = function(options) {
   if (!(this instanceof ArchiveOutputStream)) {
@@ -12366,7 +12375,7 @@ module.exports = {
 /***/ }),
 
 /***/ 3229:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -12375,7 +12384,7 @@ module.exports = {
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
-var zipUtil = __webpack_require__(8682);
+var zipUtil = __nccwpck_require__(8682);
 
 var DATA_DESCRIPTOR_FLAG = 1 << 3;
 var ENCRYPTION_FLAG = 1 << 0;
@@ -12612,7 +12621,7 @@ util.toDosTime = function(d) {
 /***/ }),
 
 /***/ 3179:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -12621,15 +12630,15 @@ util.toDosTime = function(d) {
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
-var inherits = __webpack_require__(1669).inherits;
-var normalizePath = __webpack_require__(5388);
+var inherits = __nccwpck_require__(1669).inherits;
+var normalizePath = __nccwpck_require__(5388);
 
-var ArchiveEntry = __webpack_require__(2240);
-var GeneralPurposeBit = __webpack_require__(3229);
-var UnixStat = __webpack_require__(713);
+var ArchiveEntry = __nccwpck_require__(2240);
+var GeneralPurposeBit = __nccwpck_require__(3229);
+var UnixStat = __nccwpck_require__(713);
 
-var constants = __webpack_require__(1704);
-var zipUtil = __webpack_require__(8682);
+var constants = __nccwpck_require__(1704);
+var zipUtil = __nccwpck_require__(8682);
 
 var ZipArchiveEntry = module.exports = function(name) {
   if (!(this instanceof ZipArchiveEntry)) {
@@ -13025,7 +13034,7 @@ ZipArchiveEntry.prototype.isZip64 = function() {
 /***/ }),
 
 /***/ 4432:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -13034,18 +13043,18 @@ ZipArchiveEntry.prototype.isZip64 = function() {
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
-var inherits = __webpack_require__(1669).inherits;
-var crc32 = __webpack_require__(4794);
-var {CRC32Stream} = __webpack_require__(5101);
-var {DeflateCRC32Stream} = __webpack_require__(5101);
+var inherits = __nccwpck_require__(1669).inherits;
+var crc32 = __nccwpck_require__(4794);
+var {CRC32Stream} = __nccwpck_require__(5101);
+var {DeflateCRC32Stream} = __nccwpck_require__(5101);
 
-var ArchiveOutputStream = __webpack_require__(6728);
-var ZipArchiveEntry = __webpack_require__(3179);
-var GeneralPurposeBit = __webpack_require__(3229);
+var ArchiveOutputStream = __nccwpck_require__(6728);
+var ZipArchiveEntry = __nccwpck_require__(3179);
+var GeneralPurposeBit = __nccwpck_require__(3229);
 
-var constants = __webpack_require__(1704);
-var util = __webpack_require__(5208);
-var zipUtil = __webpack_require__(8682);
+var constants = __nccwpck_require__(1704);
+var util = __nccwpck_require__(5208);
+var zipUtil = __nccwpck_require__(8682);
 
 var ZipArchiveOutputStream = module.exports = function(options) {
   if (!(this instanceof ZipArchiveOutputStream)) {
@@ -13472,7 +13481,7 @@ ZipArchiveOutputStream.prototype.setComment = function(comment) {
 /***/ }),
 
 /***/ 5445:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -13482,16 +13491,16 @@ ZipArchiveOutputStream.prototype.setComment = function(comment) {
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
 module.exports = {
-  ArchiveEntry: __webpack_require__(2240),
-  ZipArchiveEntry: __webpack_require__(3179),
-  ArchiveOutputStream: __webpack_require__(6728),
-  ZipArchiveOutputStream: __webpack_require__(4432)
+  ArchiveEntry: __nccwpck_require__(2240),
+  ZipArchiveEntry: __nccwpck_require__(3179),
+  ArchiveOutputStream: __nccwpck_require__(6728),
+  ZipArchiveOutputStream: __nccwpck_require__(4432)
 };
 
 /***/ }),
 
 /***/ 5208:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * node-compress-commons
@@ -13500,8 +13509,8 @@ module.exports = {
  * Licensed under the MIT license.
  * https://github.com/archiverjs/node-compress-commons/blob/master/LICENSE-MIT
  */
-var Stream = __webpack_require__(2413).Stream;
-var PassThrough = __webpack_require__(1642).PassThrough;
+var Stream = __nccwpck_require__(2413).Stream;
+var PassThrough = __nccwpck_require__(1642).PassThrough;
 
 var util = module.exports = {};
 
@@ -13778,7 +13787,7 @@ CRC32.str = crc32_str;
 /***/ }),
 
 /***/ 4521:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 /**
@@ -13791,9 +13800,9 @@ CRC32.str = crc32_str;
 
  
 
-const {Transform} = __webpack_require__(1642);
+const {Transform} = __nccwpck_require__(1642);
 
-const crc32 = __webpack_require__(3201);
+const crc32 = __nccwpck_require__(3201);
 
 class CRC32Stream extends Transform {
   constructor(options) {
@@ -13834,7 +13843,7 @@ module.exports = CRC32Stream;
 /***/ }),
 
 /***/ 2563:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 /**
@@ -13847,9 +13856,9 @@ module.exports = CRC32Stream;
 
 
 
-const {DeflateRaw} = __webpack_require__(8761);
+const {DeflateRaw} = __nccwpck_require__(8761);
 
-const crc32 = __webpack_require__(3201);
+const crc32 = __nccwpck_require__(3201);
 
 class DeflateCRC32Stream extends DeflateRaw {
   constructor(options) {
@@ -13904,7 +13913,7 @@ module.exports = DeflateCRC32Stream;
 /***/ }),
 
 /***/ 5101:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 /**
@@ -13918,18 +13927,18 @@ module.exports = DeflateCRC32Stream;
 
 
 module.exports = {
-  CRC32Stream: __webpack_require__(4521),
-  DeflateCRC32Stream: __webpack_require__(2563)
+  CRC32Stream: __nccwpck_require__(4521),
+  DeflateCRC32Stream: __nccwpck_require__(2563)
 }
 
 
 /***/ }),
 
 /***/ 8611:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var Stream = __webpack_require__(2413).Stream;
-var util = __webpack_require__(1669);
+var Stream = __nccwpck_require__(2413).Stream;
+var util = __nccwpck_require__(1669);
 
 module.exports = DelayedStream;
 function DelayedStream() {
@@ -14040,9 +14049,9 @@ DelayedStream.prototype._checkIfMaxDataSizeExceeded = function() {
 /***/ }),
 
 /***/ 1205:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var once = __webpack_require__(1223);
+var once = __nccwpck_require__(1223);
 
 var noop = function() {};
 
@@ -14141,18 +14150,18 @@ module.exports = eos;
 /***/ }),
 
 /***/ 4334:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var CombinedStream = __webpack_require__(5443);
-var util = __webpack_require__(1669);
-var path = __webpack_require__(5622);
-var http = __webpack_require__(8605);
-var https = __webpack_require__(7211);
-var parseUrl = __webpack_require__(8835).parse;
-var fs = __webpack_require__(5747);
-var mime = __webpack_require__(3583);
-var asynckit = __webpack_require__(4812);
-var populate = __webpack_require__(7142);
+var CombinedStream = __nccwpck_require__(5443);
+var util = __nccwpck_require__(1669);
+var path = __nccwpck_require__(5622);
+var http = __nccwpck_require__(8605);
+var https = __nccwpck_require__(7211);
+var parseUrl = __nccwpck_require__(8835).parse;
+var fs = __nccwpck_require__(5747);
+var mime = __nccwpck_require__(3583);
+var asynckit = __nccwpck_require__(4812);
+var populate = __nccwpck_require__(7142);
 
 // Public API
 module.exports = FormData;
@@ -14659,15 +14668,15 @@ module.exports = function(dst, src) {
 /***/ }),
 
 /***/ 3186:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(5747).constants || __webpack_require__(7619)
+module.exports = __nccwpck_require__(5747).constants || __nccwpck_require__(7619)
 
 
 /***/ }),
 
 /***/ 6863:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = realpath
 realpath.realpath = realpath
@@ -14676,13 +14685,13 @@ realpath.realpathSync = realpathSync
 realpath.monkeypatch = monkeypatch
 realpath.unmonkeypatch = unmonkeypatch
 
-var fs = __webpack_require__(5747)
+var fs = __nccwpck_require__(5747)
 var origRealpath = fs.realpath
 var origRealpathSync = fs.realpathSync
 
 var version = process.version
 var ok = /^v[0-5]\./.test(version)
-var old = __webpack_require__(1734)
+var old = __nccwpck_require__(1734)
 
 function newError (er) {
   return er && er.syscall === 'realpath' && (
@@ -14740,7 +14749,7 @@ function unmonkeypatch () {
 /***/ }),
 
 /***/ 1734:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -14763,9 +14772,9 @@ function unmonkeypatch () {
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var pathModule = __webpack_require__(5622);
+var pathModule = __nccwpck_require__(5622);
 var isWindows = process.platform === 'win32';
-var fs = __webpack_require__(5747);
+var fs = __nccwpck_require__(5747);
 
 // JavaScript implementation of realpath, ported from node pre-v6
 
@@ -15050,7 +15059,7 @@ exports.realpath = function realpath(p, cache, cb) {
 /***/ }),
 
 /***/ 7625:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 exports.alphasort = alphasort
 exports.alphasorti = alphasorti
@@ -15066,9 +15075,9 @@ function ownProp (obj, field) {
   return Object.prototype.hasOwnProperty.call(obj, field)
 }
 
-var path = __webpack_require__(5622)
-var minimatch = __webpack_require__(3973)
-var isAbsolute = __webpack_require__(8714)
+var path = __nccwpck_require__(5622)
+var minimatch = __nccwpck_require__(3973)
+var isAbsolute = __nccwpck_require__(8714)
 var Minimatch = minimatch.Minimatch
 
 function alphasorti (a, b) {
@@ -15297,7 +15306,7 @@ function childrenIgnored (self, path) {
 /***/ }),
 
 /***/ 1957:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // Approach:
 //
@@ -15341,27 +15350,27 @@ function childrenIgnored (self, path) {
 
 module.exports = glob
 
-var fs = __webpack_require__(5747)
-var rp = __webpack_require__(6863)
-var minimatch = __webpack_require__(3973)
+var fs = __nccwpck_require__(5747)
+var rp = __nccwpck_require__(6863)
+var minimatch = __nccwpck_require__(3973)
 var Minimatch = minimatch.Minimatch
-var inherits = __webpack_require__(4124)
-var EE = __webpack_require__(8614).EventEmitter
-var path = __webpack_require__(5622)
-var assert = __webpack_require__(2357)
-var isAbsolute = __webpack_require__(8714)
-var globSync = __webpack_require__(9010)
-var common = __webpack_require__(7625)
+var inherits = __nccwpck_require__(4124)
+var EE = __nccwpck_require__(8614).EventEmitter
+var path = __nccwpck_require__(5622)
+var assert = __nccwpck_require__(2357)
+var isAbsolute = __nccwpck_require__(8714)
+var globSync = __nccwpck_require__(9010)
+var common = __nccwpck_require__(7625)
 var alphasort = common.alphasort
 var alphasorti = common.alphasorti
 var setopts = common.setopts
 var ownProp = common.ownProp
-var inflight = __webpack_require__(2492)
-var util = __webpack_require__(1669)
+var inflight = __nccwpck_require__(2492)
+var util = __nccwpck_require__(1669)
 var childrenIgnored = common.childrenIgnored
 var isIgnored = common.isIgnored
 
-var once = __webpack_require__(1223)
+var once = __nccwpck_require__(1223)
 
 function glob (pattern, options, cb) {
   if (typeof options === 'function') cb = options, options = {}
@@ -16094,21 +16103,21 @@ Glob.prototype._stat2 = function (f, abs, er, stat, cb) {
 /***/ }),
 
 /***/ 9010:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = globSync
 globSync.GlobSync = GlobSync
 
-var fs = __webpack_require__(5747)
-var rp = __webpack_require__(6863)
-var minimatch = __webpack_require__(3973)
+var fs = __nccwpck_require__(5747)
+var rp = __nccwpck_require__(6863)
+var minimatch = __nccwpck_require__(3973)
 var Minimatch = minimatch.Minimatch
-var Glob = __webpack_require__(1957).Glob
-var util = __webpack_require__(1669)
-var path = __webpack_require__(5622)
-var assert = __webpack_require__(2357)
-var isAbsolute = __webpack_require__(8714)
-var common = __webpack_require__(7625)
+var Glob = __nccwpck_require__(1957).Glob
+var util = __nccwpck_require__(1669)
+var path = __nccwpck_require__(5622)
+var assert = __nccwpck_require__(2357)
+var isAbsolute = __nccwpck_require__(8714)
+var common = __nccwpck_require__(7625)
 var alphasort = common.alphasort
 var alphasorti = common.alphasorti
 var setopts = common.setopts
@@ -16614,14 +16623,14 @@ function clone (obj) {
 /***/ }),
 
 /***/ 7758:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var fs = __webpack_require__(5747)
-var polyfills = __webpack_require__(263)
-var legacy = __webpack_require__(3086)
-var clone = __webpack_require__(7356)
+var fs = __nccwpck_require__(5747)
+var polyfills = __nccwpck_require__(263)
+var legacy = __nccwpck_require__(3086)
+var clone = __nccwpck_require__(7356)
 
-var util = __webpack_require__(1669)
+var util = __nccwpck_require__(1669)
 
 /* istanbul ignore next - node 0.x polyfill */
 var gracefulQueue
@@ -16702,7 +16711,7 @@ if (!fs[gracefulQueue]) {
   if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || '')) {
     process.on('exit', function() {
       debug(fs[gracefulQueue])
-      __webpack_require__(2357).equal(fs[gracefulQueue].length, 0)
+      __nccwpck_require__(2357).equal(fs[gracefulQueue].length, 0)
     })
   }
 }
@@ -16975,9 +16984,9 @@ function retry () {
 /***/ }),
 
 /***/ 3086:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var Stream = __webpack_require__(2413).Stream
+var Stream = __nccwpck_require__(2413).Stream
 
 module.exports = legacy
 
@@ -17100,9 +17109,9 @@ function legacy (fs) {
 /***/ }),
 
 /***/ 263:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var constants = __webpack_require__(7619)
+var constants = __nccwpck_require__(7619)
 
 var origCwd = process.cwd
 var cwd = null
@@ -17449,11 +17458,11 @@ function patch (fs) {
 /***/ }),
 
 /***/ 2492:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var wrappy = __webpack_require__(2940)
+var wrappy = __nccwpck_require__(2940)
 var reqs = Object.create(null)
-var once = __webpack_require__(1223)
+var once = __nccwpck_require__(1223)
 
 module.exports = wrappy(inflight)
 
@@ -17510,16 +17519,16 @@ function slice (args) {
 /***/ }),
 
 /***/ 4124:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 try {
-  var util = __webpack_require__(1669);
+  var util = __nccwpck_require__(1669);
   /* istanbul ignore next */
   if (typeof util.inherits !== 'function') throw '';
   module.exports = util.inherits;
 } catch (e) {
   /* istanbul ignore next */
-  module.exports = __webpack_require__(8544);
+  module.exports = __nccwpck_require__(8544);
 }
 
 
@@ -17609,10 +17618,10 @@ module.exports = Array.isArray || function (arr) {
 /***/ }),
 
 /***/ 2084:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var util = __webpack_require__(1669);
-var PassThrough = __webpack_require__(7818);
+var util = __nccwpck_require__(1669);
+var PassThrough = __nccwpck_require__(7818);
 
 module.exports = {
   Readable: Readable,
@@ -17670,7 +17679,7 @@ function Writable(fn, options) {
 /***/ }),
 
 /***/ 5706:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -17703,7 +17712,7 @@ function Writable(fn, options) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -17718,12 +17727,12 @@ var objectKeys = Object.keys || function (obj) {
 module.exports = Duplex;
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
-var Readable = __webpack_require__(9140);
-var Writable = __webpack_require__(4960);
+var Readable = __nccwpck_require__(9140);
+var Writable = __nccwpck_require__(4960);
 
 util.inherits(Duplex, Readable);
 
@@ -17808,7 +17817,7 @@ Duplex.prototype._destroy = function (err, cb) {
 /***/ }),
 
 /***/ 982:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -17840,11 +17849,11 @@ Duplex.prototype._destroy = function (err, cb) {
 
 module.exports = PassThrough;
 
-var Transform = __webpack_require__(5072);
+var Transform = __nccwpck_require__(5072);
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 util.inherits(PassThrough, Transform);
@@ -17862,7 +17871,7 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 /***/ }),
 
 /***/ 9140:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -17890,13 +17899,13 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 module.exports = Readable;
 
 /*<replacement>*/
-var isArray = __webpack_require__(893);
+var isArray = __nccwpck_require__(893);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -17906,7 +17915,7 @@ var Duplex;
 Readable.ReadableState = ReadableState;
 
 /*<replacement>*/
-var EE = __webpack_require__(8614).EventEmitter;
+var EE = __nccwpck_require__(8614).EventEmitter;
 
 var EElistenerCount = function (emitter, type) {
   return emitter.listeners(type).length;
@@ -17914,12 +17923,12 @@ var EElistenerCount = function (emitter, type) {
 /*</replacement>*/
 
 /*<replacement>*/
-var Stream = __webpack_require__(8745);
+var Stream = __nccwpck_require__(8745);
 /*</replacement>*/
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -17931,12 +17940,12 @@ function _isUint8Array(obj) {
 /*</replacement>*/
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(1669);
+var debugUtil = __nccwpck_require__(1669);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -17945,8 +17954,8 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(5454);
-var destroyImpl = __webpack_require__(8999);
+var BufferList = __nccwpck_require__(5454);
+var destroyImpl = __nccwpck_require__(8999);
 var StringDecoder;
 
 util.inherits(Readable, Stream);
@@ -17966,7 +17975,7 @@ function prependListener(emitter, event, fn) {
 }
 
 function ReadableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(5706);
+  Duplex = Duplex || __nccwpck_require__(5706);
 
   options = options || {};
 
@@ -18036,14 +18045,14 @@ function ReadableState(options, stream) {
   this.decoder = null;
   this.encoding = null;
   if (options.encoding) {
-    if (!StringDecoder) StringDecoder = __webpack_require__(4749)/* .StringDecoder */ .s;
+    if (!StringDecoder) StringDecoder = __nccwpck_require__(4749)/* .StringDecoder */ .s;
     this.decoder = new StringDecoder(options.encoding);
     this.encoding = options.encoding;
   }
 }
 
 function Readable(options) {
-  Duplex = Duplex || __webpack_require__(5706);
+  Duplex = Duplex || __nccwpck_require__(5706);
 
   if (!(this instanceof Readable)) return new Readable(options);
 
@@ -18192,7 +18201,7 @@ Readable.prototype.isPaused = function () {
 
 // backwards compatibility.
 Readable.prototype.setEncoding = function (enc) {
-  if (!StringDecoder) StringDecoder = __webpack_require__(4749)/* .StringDecoder */ .s;
+  if (!StringDecoder) StringDecoder = __nccwpck_require__(4749)/* .StringDecoder */ .s;
   this._readableState.decoder = new StringDecoder(enc);
   this._readableState.encoding = enc;
   return this;
@@ -18888,7 +18897,7 @@ function indexOf(xs, x) {
 /***/ }),
 
 /***/ 5072:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -18958,11 +18967,11 @@ function indexOf(xs, x) {
 
 module.exports = Transform;
 
-var Duplex = __webpack_require__(5706);
+var Duplex = __nccwpck_require__(5706);
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 util.inherits(Transform, Duplex);
@@ -19109,7 +19118,7 @@ function done(stream, er, data) {
 /***/ }),
 
 /***/ 4960:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -19141,7 +19150,7 @@ function done(stream, er, data) {
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 module.exports = Writable;
@@ -19178,23 +19187,23 @@ var Duplex;
 Writable.WritableState = WritableState;
 
 /*<replacement>*/
-var util = Object.create(__webpack_require__(5898));
-util.inherits = __webpack_require__(4124);
+var util = Object.create(__nccwpck_require__(5898));
+util.inherits = __nccwpck_require__(4124);
 /*</replacement>*/
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(7127)
+  deprecate: __nccwpck_require__(7127)
 };
 /*</replacement>*/
 
 /*<replacement>*/
-var Stream = __webpack_require__(8745);
+var Stream = __nccwpck_require__(8745);
 /*</replacement>*/
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -19205,14 +19214,14 @@ function _isUint8Array(obj) {
 
 /*</replacement>*/
 
-var destroyImpl = __webpack_require__(8999);
+var destroyImpl = __nccwpck_require__(8999);
 
 util.inherits(Writable, Stream);
 
 function nop() {}
 
 function WritableState(options, stream) {
-  Duplex = Duplex || __webpack_require__(5706);
+  Duplex = Duplex || __nccwpck_require__(5706);
 
   options = options || {};
 
@@ -19362,7 +19371,7 @@ if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.protot
 }
 
 function Writable(options) {
-  Duplex = Duplex || __webpack_require__(5706);
+  Duplex = Duplex || __nccwpck_require__(5706);
 
   // Writable ctor is applied to Duplexes, too.
   // `realHasInstance` is necessary because using plain `instanceof`
@@ -19803,15 +19812,15 @@ Writable.prototype._destroy = function (err, cb) {
 /***/ }),
 
 /***/ 5454:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Buffer = __webpack_require__(1867).Buffer;
-var util = __webpack_require__(1669);
+var Buffer = __nccwpck_require__(1867).Buffer;
+var util = __nccwpck_require__(1669);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -19889,14 +19898,14 @@ if (util && util.inspect && util.inspect.custom) {
 /***/ }),
 
 /***/ 8999:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
 /*<replacement>*/
 
-var pna = __webpack_require__(7810);
+var pna = __nccwpck_require__(7810);
 /*</replacement>*/
 
 // undocumented cb() API, needed for core, not for public API
@@ -19970,25 +19979,25 @@ module.exports = {
 /***/ }),
 
 /***/ 8745:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(2413);
+module.exports = __nccwpck_require__(2413);
 
 
 /***/ }),
 
 /***/ 7818:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(2399).PassThrough
+module.exports = __nccwpck_require__(2399).PassThrough
 
 
 /***/ }),
 
 /***/ 2399:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
-var Stream = __webpack_require__(2413);
+var Stream = __nccwpck_require__(2413);
 if (process.env.READABLE_STREAM === 'disable' && Stream) {
   module.exports = Stream;
   exports = module.exports = Stream.Readable;
@@ -19999,20 +20008,20 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
   exports.PassThrough = Stream.PassThrough;
   exports.Stream = Stream;
 } else {
-  exports = module.exports = __webpack_require__(9140);
+  exports = module.exports = __nccwpck_require__(9140);
   exports.Stream = Stream || exports;
   exports.Readable = exports;
-  exports.Writable = __webpack_require__(4960);
-  exports.Duplex = __webpack_require__(5706);
-  exports.Transform = __webpack_require__(5072);
-  exports.PassThrough = __webpack_require__(982);
+  exports.Writable = __nccwpck_require__(4960);
+  exports.Duplex = __nccwpck_require__(5706);
+  exports.Transform = __nccwpck_require__(5072);
+  exports.PassThrough = __nccwpck_require__(982);
 }
 
 
 /***/ }),
 
 /***/ 4749:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -20040,7 +20049,7 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(1867).Buffer;
+var Buffer = __nccwpck_require__(1867).Buffer;
 /*</replacement>*/
 
 var isEncoding = Buffer.isEncoding || function (encoding) {
@@ -23857,7 +23866,7 @@ module.exports = union;
 /***/ }),
 
 /***/ 7426:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /*!
  * mime-db
@@ -23869,13 +23878,13 @@ module.exports = union;
  * Module exports.
  */
 
-module.exports = __webpack_require__(3313)
+module.exports = __nccwpck_require__(3313)
 
 
 /***/ }),
 
 /***/ 3583:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 /*!
@@ -23892,8 +23901,8 @@ module.exports = __webpack_require__(3313)
  * @private
  */
 
-var db = __webpack_require__(7426)
-var extname = __webpack_require__(5622).extname
+var db = __nccwpck_require__(7426)
+var extname = __nccwpck_require__(5622).extname
 
 /**
  * Module variables.
@@ -24071,18 +24080,18 @@ function populateMaps (extensions, types) {
 /***/ }),
 
 /***/ 3973:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = minimatch
 minimatch.Minimatch = Minimatch
 
 var path = { sep: '/' }
 try {
-  path = __webpack_require__(5622)
+  path = __nccwpck_require__(5622)
 } catch (er) {}
 
 var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-var expand = __webpack_require__(3717)
+var expand = __nccwpck_require__(3717)
 
 var plTypes = {
   '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
@@ -25043,9 +25052,9 @@ module.exports = function(path, stripTrailing) {
 /***/ }),
 
 /***/ 1223:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var wrappy = __webpack_require__(2940)
+var wrappy = __nccwpck_require__(2940)
 module.exports = wrappy(once)
 module.exports.strict = wrappy(onceStrict)
 
@@ -25297,7 +25306,7 @@ module.exports.q = codes;
 /***/ }),
 
 /***/ 1359:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -25341,11 +25350,11 @@ var objectKeys = Object.keys || function (obj) {
 
 module.exports = Duplex;
 
-var Readable = __webpack_require__(1433);
+var Readable = __nccwpck_require__(1433);
 
-var Writable = __webpack_require__(6993);
+var Writable = __nccwpck_require__(6993);
 
-__webpack_require__(4124)(Duplex, Readable);
+__nccwpck_require__(4124)(Duplex, Readable);
 
 {
   // Allow the keys array to be GC'ed.
@@ -25443,7 +25452,7 @@ Object.defineProperty(Duplex.prototype, 'destroyed', {
 /***/ }),
 
 /***/ 1542:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -25473,9 +25482,9 @@ Object.defineProperty(Duplex.prototype, 'destroyed', {
 
 module.exports = PassThrough;
 
-var Transform = __webpack_require__(4415);
+var Transform = __nccwpck_require__(4415);
 
-__webpack_require__(4124)(PassThrough, Transform);
+__nccwpck_require__(4124)(PassThrough, Transform);
 
 function PassThrough(options) {
   if (!(this instanceof PassThrough)) return new PassThrough(options);
@@ -25489,7 +25498,7 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 /***/ }),
 
 /***/ 1433:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -25523,7 +25532,7 @@ var Duplex;
 Readable.ReadableState = ReadableState;
 /*<replacement>*/
 
-var EE = __webpack_require__(8614).EventEmitter;
+var EE = __nccwpck_require__(8614).EventEmitter;
 
 var EElistenerCount = function EElistenerCount(emitter, type) {
   return emitter.listeners(type).length;
@@ -25533,11 +25542,11 @@ var EElistenerCount = function EElistenerCount(emitter, type) {
 /*<replacement>*/
 
 
-var Stream = __webpack_require__(2387);
+var Stream = __nccwpck_require__(2387);
 /*</replacement>*/
 
 
-var Buffer = __webpack_require__(4293).Buffer;
+var Buffer = __nccwpck_require__(4293).Buffer;
 
 var OurUint8Array = global.Uint8Array || function () {};
 
@@ -25551,7 +25560,7 @@ function _isUint8Array(obj) {
 /*<replacement>*/
 
 
-var debugUtil = __webpack_require__(1669);
+var debugUtil = __nccwpck_require__(1669);
 
 var debug;
 
@@ -25563,14 +25572,14 @@ if (debugUtil && debugUtil.debuglog) {
 /*</replacement>*/
 
 
-var BufferList = __webpack_require__(2746);
+var BufferList = __nccwpck_require__(2746);
 
-var destroyImpl = __webpack_require__(7049);
+var destroyImpl = __nccwpck_require__(7049);
 
-var _require = __webpack_require__(9948),
+var _require = __nccwpck_require__(9948),
     getHighWaterMark = _require.getHighWaterMark;
 
-var _require$codes = __webpack_require__(7214)/* .codes */ .q,
+var _require$codes = __nccwpck_require__(7214)/* .codes */ .q,
     ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
     ERR_STREAM_PUSH_AFTER_EOF = _require$codes.ERR_STREAM_PUSH_AFTER_EOF,
     ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
@@ -25581,7 +25590,7 @@ var StringDecoder;
 var createReadableStreamAsyncIterator;
 var from;
 
-__webpack_require__(4124)(Readable, Stream);
+__nccwpck_require__(4124)(Readable, Stream);
 
 var errorOrDestroy = destroyImpl.errorOrDestroy;
 var kProxyEvents = ['error', 'close', 'destroy', 'pause', 'resume'];
@@ -25598,7 +25607,7 @@ function prependListener(emitter, event, fn) {
 }
 
 function ReadableState(options, stream, isDuplex) {
-  Duplex = Duplex || __webpack_require__(1359);
+  Duplex = Duplex || __nccwpck_require__(1359);
   options = options || {}; // Duplex streams are both readable and writable, but share
   // the same options object.
   // However, some cases require setting options to different
@@ -25654,14 +25663,14 @@ function ReadableState(options, stream, isDuplex) {
   this.encoding = null;
 
   if (options.encoding) {
-    if (!StringDecoder) StringDecoder = __webpack_require__(4841)/* .StringDecoder */ .s;
+    if (!StringDecoder) StringDecoder = __nccwpck_require__(4841)/* .StringDecoder */ .s;
     this.decoder = new StringDecoder(options.encoding);
     this.encoding = options.encoding;
   }
 }
 
 function Readable(options) {
-  Duplex = Duplex || __webpack_require__(1359);
+  Duplex = Duplex || __nccwpck_require__(1359);
   if (!(this instanceof Readable)) return new Readable(options); // Checking for a Stream.Duplex instance is faster here instead of inside
   // the ReadableState constructor, at least with V8 6.5
 
@@ -25816,7 +25825,7 @@ Readable.prototype.isPaused = function () {
 
 
 Readable.prototype.setEncoding = function (enc) {
-  if (!StringDecoder) StringDecoder = __webpack_require__(4841)/* .StringDecoder */ .s;
+  if (!StringDecoder) StringDecoder = __nccwpck_require__(4841)/* .StringDecoder */ .s;
   var decoder = new StringDecoder(enc);
   this._readableState.decoder = decoder; // If setEncoding(null), decoder.encoding equals utf8
 
@@ -26500,7 +26509,7 @@ Readable.prototype.wrap = function (stream) {
 if (typeof Symbol === 'function') {
   Readable.prototype[Symbol.asyncIterator] = function () {
     if (createReadableStreamAsyncIterator === undefined) {
-      createReadableStreamAsyncIterator = __webpack_require__(3306);
+      createReadableStreamAsyncIterator = __nccwpck_require__(3306);
     }
 
     return createReadableStreamAsyncIterator(this);
@@ -26602,7 +26611,7 @@ function endReadableNT(state, stream) {
 if (typeof Symbol === 'function') {
   Readable.from = function (iterable, opts) {
     if (from === undefined) {
-      from = __webpack_require__(9082);
+      from = __nccwpck_require__(9082);
     }
 
     return from(Readable, iterable, opts);
@@ -26620,7 +26629,7 @@ function indexOf(xs, x) {
 /***/ }),
 
 /***/ 4415:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -26688,15 +26697,15 @@ function indexOf(xs, x) {
 
 module.exports = Transform;
 
-var _require$codes = __webpack_require__(7214)/* .codes */ .q,
+var _require$codes = __nccwpck_require__(7214)/* .codes */ .q,
     ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
     ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
     ERR_TRANSFORM_ALREADY_TRANSFORMING = _require$codes.ERR_TRANSFORM_ALREADY_TRANSFORMING,
     ERR_TRANSFORM_WITH_LENGTH_0 = _require$codes.ERR_TRANSFORM_WITH_LENGTH_0;
 
-var Duplex = __webpack_require__(1359);
+var Duplex = __nccwpck_require__(1359);
 
-__webpack_require__(4124)(Transform, Duplex);
+__nccwpck_require__(4124)(Transform, Duplex);
 
 function afterTransform(er, data) {
   var ts = this._transformState;
@@ -26828,7 +26837,7 @@ function done(stream, er, data) {
 /***/ }),
 
 /***/ 6993:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -26890,17 +26899,17 @@ Writable.WritableState = WritableState;
 /*<replacement>*/
 
 var internalUtil = {
-  deprecate: __webpack_require__(7127)
+  deprecate: __nccwpck_require__(7127)
 };
 /*</replacement>*/
 
 /*<replacement>*/
 
-var Stream = __webpack_require__(2387);
+var Stream = __nccwpck_require__(2387);
 /*</replacement>*/
 
 
-var Buffer = __webpack_require__(4293).Buffer;
+var Buffer = __nccwpck_require__(4293).Buffer;
 
 var OurUint8Array = global.Uint8Array || function () {};
 
@@ -26912,12 +26921,12 @@ function _isUint8Array(obj) {
   return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
 }
 
-var destroyImpl = __webpack_require__(7049);
+var destroyImpl = __nccwpck_require__(7049);
 
-var _require = __webpack_require__(9948),
+var _require = __nccwpck_require__(9948),
     getHighWaterMark = _require.getHighWaterMark;
 
-var _require$codes = __webpack_require__(7214)/* .codes */ .q,
+var _require$codes = __nccwpck_require__(7214)/* .codes */ .q,
     ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
     ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
     ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
@@ -26929,12 +26938,12 @@ var _require$codes = __webpack_require__(7214)/* .codes */ .q,
 
 var errorOrDestroy = destroyImpl.errorOrDestroy;
 
-__webpack_require__(4124)(Writable, Stream);
+__nccwpck_require__(4124)(Writable, Stream);
 
 function nop() {}
 
 function WritableState(options, stream, isDuplex) {
-  Duplex = Duplex || __webpack_require__(1359);
+  Duplex = Duplex || __nccwpck_require__(1359);
   options = options || {}; // Duplex streams are both readable and writable, but share
   // the same options object.
   // However, some cases require setting options to different
@@ -27060,7 +27069,7 @@ if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.protot
 }
 
 function Writable(options) {
-  Duplex = Duplex || __webpack_require__(1359); // Writable ctor is applied to Duplexes, too.
+  Duplex = Duplex || __nccwpck_require__(1359); // Writable ctor is applied to Duplexes, too.
   // `realHasInstance` is necessary because using plain `instanceof`
   // would return false, as no `_writableState` property is attached.
   // Trying to use the custom `instanceof` for Writable here will also break the
@@ -27532,7 +27541,7 @@ Writable.prototype._destroy = function (err, cb) {
 /***/ }),
 
 /***/ 3306:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
@@ -27541,7 +27550,7 @@ var _Object$setPrototypeO;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var finished = __webpack_require__(6080);
+var finished = __nccwpck_require__(6080);
 
 var kLastResolve = Symbol('lastResolve');
 var kLastReject = Symbol('lastReject');
@@ -27746,7 +27755,7 @@ module.exports = createReadableStreamAsyncIterator;
 /***/ }),
 
 /***/ 2746:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
@@ -27763,10 +27772,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var _require = __webpack_require__(4293),
+var _require = __nccwpck_require__(4293),
     Buffer = _require.Buffer;
 
-var _require2 = __webpack_require__(1669),
+var _require2 = __nccwpck_require__(1669),
     inspect = _require2.inspect;
 
 var custom = inspect && inspect.custom || 'inspect';
@@ -28075,14 +28084,14 @@ module.exports = {
 /***/ }),
 
 /***/ 6080:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Ported from https://github.com/mafintosh/end-of-stream with
 // permission from the author, Mathias Buus (@mafintosh).
 
 
-var ERR_STREAM_PREMATURE_CLOSE = __webpack_require__(7214)/* .codes.ERR_STREAM_PREMATURE_CLOSE */ .q.ERR_STREAM_PREMATURE_CLOSE;
+var ERR_STREAM_PREMATURE_CLOSE = __nccwpck_require__(7214)/* .codes.ERR_STREAM_PREMATURE_CLOSE */ .q.ERR_STREAM_PREMATURE_CLOSE;
 
 function once(callback) {
   var called = false;
@@ -28186,7 +28195,7 @@ module.exports = eos;
 /***/ }),
 
 /***/ 9082:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
@@ -28201,7 +28210,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var ERR_INVALID_ARG_TYPE = __webpack_require__(7214)/* .codes.ERR_INVALID_ARG_TYPE */ .q.ERR_INVALID_ARG_TYPE;
+var ERR_INVALID_ARG_TYPE = __nccwpck_require__(7214)/* .codes.ERR_INVALID_ARG_TYPE */ .q.ERR_INVALID_ARG_TYPE;
 
 function from(Readable, iterable, opts) {
   var iterator;
@@ -28257,7 +28266,7 @@ module.exports = from;
 /***/ }),
 
 /***/ 6989:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 // Ported from https://github.com/mafintosh/pump with
@@ -28275,7 +28284,7 @@ function once(callback) {
   };
 }
 
-var _require$codes = __webpack_require__(7214)/* .codes */ .q,
+var _require$codes = __nccwpck_require__(7214)/* .codes */ .q,
     ERR_MISSING_ARGS = _require$codes.ERR_MISSING_ARGS,
     ERR_STREAM_DESTROYED = _require$codes.ERR_STREAM_DESTROYED;
 
@@ -28294,7 +28303,7 @@ function destroyer(stream, reading, writing, callback) {
   stream.on('close', function () {
     closed = true;
   });
-  if (eos === undefined) eos = __webpack_require__(6080);
+  if (eos === undefined) eos = __nccwpck_require__(6080);
   eos(stream, {
     readable: reading,
     writable: writing
@@ -28361,12 +28370,12 @@ module.exports = pipeline;
 /***/ }),
 
 /***/ 9948:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var ERR_INVALID_OPT_VALUE = __webpack_require__(7214)/* .codes.ERR_INVALID_OPT_VALUE */ .q.ERR_INVALID_OPT_VALUE;
+var ERR_INVALID_OPT_VALUE = __nccwpck_require__(7214)/* .codes.ERR_INVALID_OPT_VALUE */ .q.ERR_INVALID_OPT_VALUE;
 
 function highWaterMarkFrom(options, isDuplex, duplexKey) {
   return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null;
@@ -28395,45 +28404,45 @@ module.exports = {
 /***/ }),
 
 /***/ 2387:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(2413);
+module.exports = __nccwpck_require__(2413);
 
 
 /***/ }),
 
 /***/ 1642:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
-var Stream = __webpack_require__(2413);
+var Stream = __nccwpck_require__(2413);
 if (process.env.READABLE_STREAM === 'disable' && Stream) {
   module.exports = Stream.Readable;
   Object.assign(module.exports, Stream);
   module.exports.Stream = Stream;
 } else {
-  exports = module.exports = __webpack_require__(1433);
+  exports = module.exports = __nccwpck_require__(1433);
   exports.Stream = Stream || exports;
   exports.Readable = exports;
-  exports.Writable = __webpack_require__(6993);
-  exports.Duplex = __webpack_require__(1359);
-  exports.Transform = __webpack_require__(4415);
-  exports.PassThrough = __webpack_require__(1542);
-  exports.finished = __webpack_require__(6080);
-  exports.pipeline = __webpack_require__(6989);
+  exports.Writable = __nccwpck_require__(6993);
+  exports.Duplex = __nccwpck_require__(1359);
+  exports.Transform = __nccwpck_require__(4415);
+  exports.PassThrough = __nccwpck_require__(1542);
+  exports.finished = __nccwpck_require__(6080);
+  exports.pipeline = __nccwpck_require__(6989);
 }
 
 
 /***/ }),
 
 /***/ 7978:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = readdirGlob;
 
-const fs = __webpack_require__(5747);
-const { EventEmitter } = __webpack_require__(8614);
-const { Minimatch } = __webpack_require__(3973);
-const { resolve } = __webpack_require__(5622);
+const fs = __nccwpck_require__(5747);
+const { EventEmitter } = __nccwpck_require__(8614);
+const { Minimatch } = __nccwpck_require__(3973);
+const { resolve } = __nccwpck_require__(5622);
 
 function readdir(dir, strict) {
   return new Promise((resolve, reject) => {
@@ -28675,10 +28684,10 @@ readdirGlob.ReaddirGlob = ReaddirGlob;
 /***/ }),
 
 /***/ 1867:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
 /* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(4293)
+var buffer = __nccwpck_require__(4293)
 var Buffer = buffer.Buffer
 
 // alternative to using Object.keys for old browsers
@@ -28760,14 +28769,14 @@ module.exports = {
 /***/ }),
 
 /***/ 8838:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var stream = __webpack_require__(2413);
-var constants = __webpack_require__(2619);
-var util = __webpack_require__(1669);
+var stream = __nccwpck_require__(2413);
+var constants = __nccwpck_require__(2619);
+var util = __nccwpck_require__(1669);
 
 var ReadableStreamBuffer = module.exports = function(opts) {
   var that = this;
@@ -28882,27 +28891,27 @@ util.inherits(ReadableStreamBuffer, stream.Readable);
 /***/ }),
 
 /***/ 8168:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-module.exports = __webpack_require__(2619);
-module.exports.ReadableStreamBuffer = __webpack_require__(8838);
-module.exports.WritableStreamBuffer = __webpack_require__(6055);
+module.exports = __nccwpck_require__(2619);
+module.exports.ReadableStreamBuffer = __nccwpck_require__(8838);
+module.exports.WritableStreamBuffer = __nccwpck_require__(6055);
 
 
 /***/ }),
 
 /***/ 6055:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var util = __webpack_require__(1669);
-var stream = __webpack_require__(2413);
-var constants = __webpack_require__(2619);
+var util = __nccwpck_require__(1669);
+var stream = __nccwpck_require__(2413);
+var constants = __nccwpck_require__(2619);
 
 var WritableStreamBuffer = module.exports = function(opts) {
   opts = opts || {};
@@ -28975,7 +28984,7 @@ util.inherits(WritableStreamBuffer, stream.Writable);
 /***/ }),
 
 /***/ 4841:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -29003,7 +29012,7 @@ util.inherits(WritableStreamBuffer, stream.Writable);
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(2279).Buffer;
+var Buffer = __nccwpck_require__(2279).Buffer;
 /*</replacement>*/
 
 var isEncoding = Buffer.isEncoding || function (encoding) {
@@ -29278,11 +29287,11 @@ function simpleEnd(buf) {
 /***/ }),
 
 /***/ 2279:
-/***/ ((module, exports, __webpack_require__) => {
+/***/ ((module, exports, __nccwpck_require__) => {
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 /* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(4293)
+var buffer = __nccwpck_require__(4293)
 var Buffer = buffer.Buffer
 
 // alternative to using Object.keys for old browsers
@@ -29350,14 +29359,14 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /***/ }),
 
 /***/ 7882:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var util = __webpack_require__(1669)
-var bl = __webpack_require__(336)
-var headers = __webpack_require__(8860)
+var util = __nccwpck_require__(1669)
+var bl = __nccwpck_require__(336)
+var headers = __nccwpck_require__(8860)
 
-var Writable = __webpack_require__(1642).Writable
-var PassThrough = __webpack_require__(1642).PassThrough
+var Writable = __nccwpck_require__(1642).Writable
+var PassThrough = __nccwpck_require__(1642).PassThrough
 
 var noop = function () {}
 
@@ -29916,27 +29925,27 @@ exports.decode = function (buf, filenameEncoding, allowUnknownFormat) {
 /***/ }),
 
 /***/ 2283:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-exports.extract = __webpack_require__(7882)
-exports.pack = __webpack_require__(4930)
+exports.extract = __nccwpck_require__(7882)
+exports.pack = __nccwpck_require__(4930)
 
 
 /***/ }),
 
 /***/ 4930:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var constants = __webpack_require__(3186)
-var eos = __webpack_require__(1205)
-var inherits = __webpack_require__(4124)
+var constants = __nccwpck_require__(3186)
+var eos = __nccwpck_require__(1205)
+var inherits = __nccwpck_require__(4124)
 var alloc = Buffer.alloc
 
-var Readable = __webpack_require__(1642).Readable
-var Writable = __webpack_require__(1642).Writable
-var StringDecoder = __webpack_require__(4304).StringDecoder
+var Readable = __nccwpck_require__(1642).Readable
+var Writable = __nccwpck_require__(1642).Writable
+var StringDecoder = __nccwpck_require__(4304).StringDecoder
 
-var headers = __webpack_require__(8860)
+var headers = __nccwpck_require__(8860)
 
 var DMODE = parseInt('755', 8)
 var FMODE = parseInt('644', 8)
@@ -30187,14 +30196,14 @@ module.exports = Pack
 /***/ }),
 
 /***/ 7127:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 /**
  * For Node.js, simply re-export the core `util.deprecate` function.
  */
 
-module.exports = __webpack_require__(1669).deprecate;
+module.exports = __nccwpck_require__(1669).deprecate;
 
 
 /***/ }),
@@ -30240,7 +30249,7 @@ function wrappy (fn, cb) {
 /***/ }),
 
 /***/ 6454:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
  * ZipStream
@@ -30249,12 +30258,12 @@ function wrappy (fn, cb) {
  * @license [MIT]{@link https://github.com/archiverjs/node-zip-stream/blob/master/LICENSE}
  * @copyright (c) 2014 Chris Talkington, contributors.
  */
-var inherits = __webpack_require__(1669).inherits;
+var inherits = __nccwpck_require__(1669).inherits;
 
-var ZipArchiveOutputStream = __webpack_require__(5445).ZipArchiveOutputStream;
-var ZipArchiveEntry = __webpack_require__(5445).ZipArchiveEntry;
+var ZipArchiveOutputStream = __nccwpck_require__(5445).ZipArchiveOutputStream;
+var ZipArchiveEntry = __nccwpck_require__(5445).ZipArchiveEntry;
 
-var util = __webpack_require__(2072);
+var util = __nccwpck_require__(2072);
 
 /**
  * @constructor
@@ -30560,7 +30569,7 @@ module.exports = require("zlib");;
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(__webpack_module_cache__[moduleId]) {
 /******/ 			return __webpack_module_cache__[moduleId].exports;
@@ -30575,7 +30584,7 @@ module.exports = require("zlib");;
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
 /******/ 			threw = false;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
@@ -30588,11 +30597,11 @@ module.exports = require("zlib");;
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	__webpack_require__.ab = __dirname + "/";/************************************************************************/
+/******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(3109);
+/******/ 	return __nccwpck_require__(3109);
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map

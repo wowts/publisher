@@ -69,6 +69,11 @@ export async function publish(
     }
     core.info(`Changelog: ${changelog}`);
 
+    let readme;
+    if (existsSync(`${path}/README.md`)) {
+        readme = readFileSync(`${path}/README.md`, { encoding: "utf8" });
+    }
+
     const zipName = `${name}-${version}.zip`;
     core.info(`Create zip ${zipName}`);
     const zipContent = buffer.getContents();
@@ -203,6 +208,8 @@ export async function publish(
         formData.append("id", wowiId);
         formData.append("version", toc.Version);
         formData.append("compatible", wowInterfaceGameVersion.id);
+        formData.append("changelog", changelog);
+        if (readme) formData.append("description", readme);
         if (!dryrun) {
             client = bent("json", "POST", "https://api.wowinterface.com/", [
                 200,
