@@ -37,7 +37,7 @@
     },
     "devDependencies": {
         "eslint-plugin-prettier": "^3.3.1",
-        "@types/jest": "^26.0.20",
+        "@types/jest": "^26.0.23",
         "@types/node": "^15.3.0",
         "@typescript-eslint/parser": "^4.17.0",
         "@vercel/ncc": "^0.27.0",
