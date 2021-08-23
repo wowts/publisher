@@ -36,7 +36,7 @@
         "stream-buffers": "^3.0.2"
     },
     "devDependencies": {
-        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-prettier": "^3.4.1",
         "@types/jest": "^26.0.23",
         "@types/node": "^15.3.0",
         "@typescript-eslint/parser": "^4.23.0",
